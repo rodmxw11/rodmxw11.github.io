@@ -81,6 +81,7 @@ function receiveMessage(event) {
     </div>
 	<div id="event-from-mdx">      
     </div>
+	  <div><button type="button" onclidk="click_handler">Click Me!</button></div>
     <div class="w3-right">
 			<iframe id="AskWatson" style="width: 480px; height: 680px;" src="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/">
 			</iframe>
@@ -115,6 +116,12 @@ function w3_open() {
     }
 }
 
+function click_handler() {
+	console.log("==================================================>>>>>>>>>>>>>>>>>>> LOGGING OK");
+	alert("=========================================>>>> BUTTON CLICKED!!!!");
+	console.log("?????????????????????????????????????????????? do you see this????");
+}
+	
 // Close the sidebar with the close button
 function w3_close() {
     mySidebar.style.display = "none";
