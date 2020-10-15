@@ -28,7 +28,7 @@ window.addEventListener("message", receiveMessage, false);
 
 function receiveMessage(event) {
   // validate event.origin
-  document.getElementById("event-from-mdx").innerHTML = JSON.stringify(event.data);
+  document.getElementById("event-from-mdx").innerHTML = event.data; // TODO: ???????? JSON.stringify(event.data, null, 2);
   
 }
 </script>
