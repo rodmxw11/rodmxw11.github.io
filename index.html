@@ -82,6 +82,9 @@ function receiveMessage(event) {
 	<div id="event-from-mdx" style="background-color: wheat;">
     </div>
     <div class="w3-right">
+            <label for="wainput">Ask Watson:</label>
+        <input type="text" placeholder="Please enter chatbot utterance here ..." id="wainput" name="wainput" size="120" onkeydown="launch_chatbot_input(this)"></input>
+        <br>
 			<iframe id="AskWatson" style="width: 480px; height: 680px;" >
 			</iframe>
 		</div>
@@ -123,6 +126,18 @@ function w3_open() {
 window.onload = event => {
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! window.onload: ENTER")
     document.getElementById("AskWatson").src = IFRAME_URL
+
+    const input_field = document.getElementById("wainput")
+    input_field.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            const input_text = input_field.value // get current user input
+            launch_chatbot_input(input_text)  // send input_text to watson assistant
+            input_field.value = ''  // clear the input field
+            event.preventDefault();
+            return false;
+        } //endif
+        return true;
+    })
 }
 
 function launch_pwa_handler(page_type='', user_input='') {
@@ -150,7 +165,8 @@ function launch_iv_compatability() {
     return launch_pwa_handler('ivCompatibility')
 }
 
-function launch_chatbot_input(user_input='') {
+function launch_chatbot_input(input_element) {
+
     // const user_input = "adult dose wafarin"  // TODO: get this from input field
     return launch_pwa_handler('chatbotInput', user_input)
 }
