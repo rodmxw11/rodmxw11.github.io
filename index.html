@@ -132,10 +132,10 @@ window.onload = event => {
     document.getElementById("wainput").addEventListener("keydown", function(event) {
         console.log("========================== wainput event=",event)
         if (event.key === "Enter") {
-            const input_field = document.getElementById("wainput")
-            const input_text = input_field.value // get current user input
+            const text_field = event.target
+            const input_text = text_field.value // get current user input
             launch_chatbot_input(input_text)  // send input_text to watson assistant
-            input_field.value = ''  // clear the input field
+            text_field.value = ''  // clear the input field
             event.preventDefault();
             return false;
         } //endif
@@ -168,8 +168,7 @@ function launch_iv_compatability() {
     return launch_pwa_handler('ivCompatibility')
 }
 
-function launch_chatbot_input(input_element) {
-
+function launch_chatbot_input(user_input) {
     // const user_input = "adult dose wafarin"  // TODO: get this from input field
     return launch_pwa_handler('chatbotInput', user_input)
 }
