@@ -128,8 +128,9 @@ function w3_open() {
 window.onload = event => {
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! window.onload: ENTER")
     document.getElementById("AskWatson").src = IFRAME_URL
-    
+
     document.getElementById("wainput").addEventListener("keydown", function(event) {
+        console.log("========================== wainput event=",event)
         if (event.key === "Enter") {
             const input_field = document.getElementById("wainput")
             const input_text = input_field.value // get current user input
