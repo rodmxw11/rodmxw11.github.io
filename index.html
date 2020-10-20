@@ -152,12 +152,11 @@ window.onload = event => {
 
 function launch_pwa_handler(page_type='', user_input='') {
     console.log("===================================>>>>>   launch_pwa_handler: ENTER page_type=", page_type, "user_input=", user_input);
-    // event.preventDefault();
     const iframe = document.getElementById("AskWatson");
     const iframe_window =  iframe.contentWindow || iframe.contentDocument
     iframe_window.postMessage(
         {
-            type: page_type,
+            navType: page_type,
             name: "MDXWatsonNavigateTool",
             input: user_input
         },
