@@ -104,7 +104,14 @@ function receiveMessage(event) {
 
 <script>
 
-const IFRAME_URL = "https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud"
+    // see: https://www.sitepoint.com/get-url-parameters-with-javascript/
+const queryString = window.location.search
+console.log(queryString)
+    const urlParams = new URLSearchParams(queryString)
+
+// const IFRAME_URL = "https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud"
+    const IFRAME_URL = urlParams.get('pwa_iframe_url')
+    console.log("IFRAME_URL=", IFRAME_URL)
 
     // Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");
