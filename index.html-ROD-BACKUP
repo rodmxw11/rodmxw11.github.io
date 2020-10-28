@@ -87,7 +87,7 @@ function receiveMessage(event) {
         <input style="background-color: greenyellow;" type="text" placeholder="What would you like to know? ..." id="wainput" name="wainput" size="66" onkeydown="launch_chatbot_input(this)"></input>
         <br>&nbsp;
         <br>
-			<iframe id="AskWatson" src="https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud" style="width: 480px; height: 680px;" >
+			<iframe id="AskWatson" style="width: 480px; height: 680px;" >
 			</iframe>
 		</div>
   </div>
@@ -104,7 +104,14 @@ function receiveMessage(event) {
 
 <script>
 
-const IFRAME_URL = "https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/"
+    // see: https://www.sitepoint.com/get-url-parameters-with-javascript/
+const queryString = window.location.search
+console.log(queryString)
+    const urlParams = new URLSearchParams(queryString)
+
+// const IFRAME_URL = "https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud"
+    const IFRAME_URL = urlParams.get('pwa_iframe_url')
+    console.log("IFRAME_URL=", IFRAME_URL)
 
     // Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");
@@ -145,19 +152,14 @@ window.onload = event => {
 
 function launch_pwa_handler(page_type='', user_input='') {
     console.log("===================================>>>>>   launch_pwa_handler: ENTER page_type=", page_type, "user_input=", user_input);
-    // event.preventDefault();
-    const iframe = document.getElementById('AskWatson');
-    const iframe_window =  iframe.contentWindow; //|| iframe.contentDocument
-    console.log('iframe====================',iframe);
-//     console.log('iframe window.........................##',iframe_window);
-	const message={
+    const iframe = document.getElementById("AskWatson");
+    const iframe_window =  iframe.contentWindow || iframe.contentDocument
+    iframe_window.postMessage(
+        {
             navType: page_type,
             name: "MDXWatsonNavigateTool",
             input: user_input
-        };
-	console.log('Printing message  ****************', message);
-    iframe_window.postMessage(
-	    message,
+        },
         IFRAME_URL
     )
     console.log("launch_pwa_handler: EXIT");
