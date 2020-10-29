@@ -155,6 +155,7 @@ function launch_pwa_handler(page_type='', user_input='') {
     console.log('iframe====================',iframe);
 //     console.log('iframe window.........................##',iframe_window);
 	const message={
+		type: "PWA_ACTION",
             navType: page_type,
             name: "MDXWatsonNavigateTool",
             input: user_input
@@ -162,7 +163,7 @@ function launch_pwa_handler(page_type='', user_input='') {
 	console.log('Printing message  ****************', message);
     iframe_window.postMessage(
 	    message,
-            "*"  // iframe.src // IFRAME_URL
+            iframe.src
     )
     console.log("launch_pwa_handler: EXIT");
     return false; // prevent anchor tag from opening href url
