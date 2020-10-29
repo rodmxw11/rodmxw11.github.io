@@ -104,7 +104,7 @@ function receiveMessage(event) {
 
 <script>
 
-const IFRAME_URL = "https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/"
+const IFRAME_URL = "https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud"
 
     // Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");
@@ -158,7 +158,7 @@ function launch_pwa_handler(page_type='', user_input='') {
 	console.log('Printing message  ****************', message);
     iframe_window.postMessage(
 	    message,
-        IFRAME_URL
+            IFRAME_URL
     )
     console.log("launch_pwa_handler: EXIT");
     return false; // prevent anchor tag from opening href url
