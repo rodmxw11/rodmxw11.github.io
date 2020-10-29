@@ -30,7 +30,9 @@ function receiveMessage(event) {
 	console.log("receiveMessage: event=",event);
   // validate event.origin
 	console.log("receiveMessage: window.location=", window.location);
-  document.getElementById("event-from-mdx").innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
+	if (event.origin!==window.location.origin) {
+             document.getElementById("event-from-mdx").innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
+	}
 }
 
 </script>
