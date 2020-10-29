@@ -27,6 +27,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 window.addEventListener("message", receiveMessage, false);
 
 function receiveMessage(event) {
+	console.log("receiveMessage: event=",event);
   // validate event.origin
   document.getElementById("event-from-mdx").innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
 }
