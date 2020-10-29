@@ -162,7 +162,7 @@ function launch_pwa_handler(page_type='', user_input='') {
 	console.log('Printing message  ****************', message);
     iframe_window.postMessage(
 	    message,
-            IFRAME_URL
+            iframe.src // IFRAME_URL
     )
     console.log("launch_pwa_handler: EXIT");
     return false; // prevent anchor tag from opening href url
