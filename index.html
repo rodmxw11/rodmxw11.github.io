@@ -130,6 +130,22 @@ window.addEventListener("message", receiveMessage, false);
 
    }
 
+   function sendChatbotError(event) {
+     // var x = event.which || event.keyCode;
+     // document.getElementById("demo").innerHTML = "The Unicode value is: " + x;
+
+        if(event.which == 13){
+            const text_field = event.target
+            const input_text = document.getElementById("wa_error").value; // get current user input
+            launch_chatbot_error(input_text)  // send input_text to watson assistant
+            text_field.value = ''  // clear the input field
+            event.preventDefault();
+            return false;
+        }
+
+   }
+
+
   function receiveMessage(event) {
     var message_container = document.getElementById("message_container");
     message_container.style.display = "block";
@@ -249,6 +265,11 @@ function launch_chatbot_input(user_input) {
     return launch_pwa_handler('chatbotInput', user_input)
 }
 
+function launch_chatbot_error(user_input) {
+    // const user_input = "adult dose wafarin"  // TODO: get this from input field    
+    return launch_pwa_handler('fakeError', user_input)
+}
+
 
 //----------------------------------------------------------------------------------//
 /*** Dummy EHR **/
@@ -293,6 +314,7 @@ function w3_close() {
           <option value="https://mdx-pwa-dev-personal-1.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-1</option>
           <option value="https://mdx-pwa-dev-personal-2.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-2</option>
           <option value="https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-3</option>
+          <option value="https://mdx-pwa-dev-personal-4.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-4</option>
           <option value="http://localhost:3000/#/gateway?jws=">Localhost</option>
         </select>
         <br><br>
@@ -380,6 +402,15 @@ function w3_close() {
           <h3 id="message_container_title"></h3>
           <textarea id="event-from-mdx" rows="10" cols="40"></textarea>
        </div>
+       <div id="error_message_container" class="float-child-chat">
+          <br>
+          <br>
+          <label for="wa_error">Fake Error Message:</label>
+          <br>
+          <input style="background-color: pink;" type="text" placeholder="Enter error message ..." id="wa_error" name="wa_error" size="66" onkeypress="sendChatbotError(event)"></input>
+          <br>&nbsp;
+          <br>
+	 </div>
     </div>
       <footer id="Footer">
         <div class="w3-container w3-theme-l2 w3-padding-12 w3-bottom">
