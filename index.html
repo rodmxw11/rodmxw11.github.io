@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 .w3-sidebar {
@@ -22,22 +23,295 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 	width=480px;
 	height=680px;
 }
-</style>
-<script>
-window.addEventListener("message", receiveMessage, false);
 
-function receiveMessage(event) {
-	console.log("receiveMessage: event=",event);
-  // validate event.origin
-	console.log("receiveMessage: window.location=", window.location);
-	if (event.origin!==window.location.origin) {
-             document.getElementById("event-from-mdx").innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
-	}
+.w3-padding-64{
+      padding-top: 30px!important;
+    padding-bottom: 7px!important;
+}
+.userInputDisplay {
+    position: relative;
+    background: #d61a4c;
+    border-radius: 40px;
+    width: auto;
+    height: auto;
+    color: #FFF;
+    font-size: 0.875rem;
+    line-height: 1.2rem;
+    border-bottom-right-radius: 0px;
+    padding: 8px 20px;
+    float: right;
+    clear: both;
+    margin: 0.2rem 0 1.45rem 15%;
+    word-break: break-word;
 }
 
-</script>
-<body>
+.white-backround{
+  background: #bebebe !important;
+  float: right!important;
+}
 
+#main_container, #message_container{
+  display: none;
+}
+
+.w3-bottom {
+    position: fixed;
+    width: 100%;
+    z-index: -1 !important;
+}
+
+.float-container {
+ 
+}
+
+.float-child-askwatson {
+    width: 36%;
+    float: left;
+    padding: 20px;
+}  
+
+.float-child-message {
+    width: 50%;
+    float: left;
+    padding-left: 200px;
+}  
+
+.float-child-chat {
+    width: 26%;
+    float: left;
+    padding-left: 200px;
+}  
+
+</style>
+<!--script src="https://code.jquery.com/jquery-3.5.1.min.js" /></script-->
+<script type="text/javascript">
+window.addEventListener("message", receiveMessage, false);
+
+  // see: https://stackoverflow.com/questions/8642488/how-to-use-javascript-variable-in-iframe-src
+  //window.onload = event => {
+  //  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! window.onload: ENTER")  
+  //   document.getElementById("wainput").addEventListener("keydown", function(event) {
+  //       console.log("========================== wainput event=",event)
+  //       if (event.key === "Enter") {
+  //           const text_field = event.target
+  //           const input_text = text_field.value // get current user input
+  //           launch_chatbot_input(input_text)  // send input_text to watson assistant
+  //           text_field.value = ''  // clear the input field
+  //           event.preventDefault();
+  //           return false;
+  //       } //endif
+  //       return true;
+  //   })
+  // }
+
+   // $(document).on("keypress", "#wainput", function(e){
+   //      if(e.which == 13){
+   //          const text_field = event.target
+   //          const input_text = $(this).val(); // get current user input
+   //          launch_chatbot_input(input_text)  // send input_text to watson assistant
+   //          text_field.value = ''  // clear the input field
+   //          event.preventDefault();
+   //          return false;
+   //      }
+   //  });
+
+   function sendChatbotInput(event) {
+     // var x = event.which || event.keyCode;
+     // document.getElementById("demo").innerHTML = "The Unicode value is: " + x;
+
+        if(event.which == 13){
+            const text_field = event.target
+            const input_text = document.getElementById("wainput").value; // get current user input
+            launch_chatbot_input(input_text)  // send input_text to watson assistant
+            text_field.value = ''  // clear the input field
+            event.preventDefault();
+            return false;
+        }
+
+   }
+
+  function receiveMessage(event) {
+    var message_container = document.getElementById("message_container");
+    message_container.style.display = "block";
+    // validate event.origin
+    document.getElementById("event-from-mdx").value = JSON.stringify(JSON.parse(event.data), null, 2);
+    document.getElementById("message_container_title").innerText =" ==>> Message Received from PWA ";
+  }
+
+  function  postMessage(){
+      var iframeWin = document.getElementById("AskWatson").contentWindow;
+      iframeWin.postMessage(JSON.stringify({
+        error: false,
+        message: 'Here we go'
+      }), "www.domain.com");
+  }
+
+  function selectUrl() {
+    var x = document.getElementById("PWA_ENV").value;
+    document.getElementById("mobilePWAEndPoint").value = x;
+  }
+
+  function openIFrame(){
+    if(!document.getElementById("mobilePWAEndPoint").value || !document.getElementById("jwsToken").value)
+    {
+      alert ( "End Point URL OR JWS token can't be empty");
+      return false;
+    }
+
+    var welcome_container = document.getElementById("welcome_container");
+    welcome_container.style.display = "none";
+
+    var iFrameUrl = document.getElementById("mobilePWAEndPoint").value + document.getElementById("jwsToken").value;
+
+    localStorage.setItem("iFrameUrl", iFrameUrl);
+
+    document.getElementById("AskWatson").src = iFrameUrl
+    var main_container = document.getElementById("main_container");
+    main_container.style.display = "block";
+
+    var message_container = document.getElementById("message_container");
+    message_container.style.display = "none";
+
+    window.addEventListener("message", receiveMessage, false);
+  }
+
+
+
+  function reLoadIFrame(){
+
+    var welcome_container = document.getElementById("welcome_container");
+    welcome_container.style.display = "none";
+
+    var iFrameUrl = localStorage.getItem("iFrameUrl");
+    document.getElementById("AskWatson").src = iFrameUrl
+   
+    var main_container = document.getElementById("main_container");
+    main_container.style.display = "block";
+  }
+
+  function reloadTheSamePage(){
+    var iFrameUrl = localStorage.getItem("iFrameUrl");
+    if(iFrameUrl){
+      reLoadIFrame();
+    }
+    window.addEventListener("message", receiveMessage, false);
+  }
+
+  function unmountAskwatson(){
+    localStorage.removeItem("iFrameUrl");
+
+    var main_container = document.getElementById("main_container");
+    main_container.style.display = "none";
+
+    var welcome_container = document.getElementById("welcome_container");
+    welcome_container.style.display = "block";
+
+  }
+
+
+  function launch_pwa_handler(page_type='', user_input='') {
+    console.log("===================================>>>>>   launch_pwa_handler: ENTER page_type=", page_type, "user_input=", user_input);
+    // event.preventDefault();
+    const iframe = document.getElementById("AskWatson");
+    const iframe_window =  iframe.contentWindow || iframe.contentDocument
+    const message={
+    type: "PWA_ACTION",
+            navType: page_type,
+            name: "MDXWatsonNavigateTool",
+            input: user_input
+        };
+    console.log('Printing message  ****************', message);
+    iframe_window.postMessage(
+        JSON.parse(JSON.stringify(message)),
+        iframe.src
+    )
+    console.log("launch_pwa_handler: EXIT");
+
+    var message_container = document.getElementById("message_container");
+    message_container.style.display = "block";
+    // validate event.origin
+    document.getElementById("event-from-mdx").value = JSON.stringify(message, null, 2);
+    document.getElementById("message_container_title").innerText =" <<== Message Sent To PWA ";
+
+    return false; // prevent anchor tag from opening href url
+}
+
+function launch_drug_interactions() {
+    return launch_pwa_handler('drugInteraction')
+}
+
+function launch_iv_compatability() {
+    return launch_pwa_handler('ivCompatibility')
+}
+
+function launch_chatbot_input(user_input) {
+    // const user_input = "adult dose wafarin"  // TODO: get this from input field    
+    return launch_pwa_handler('chatbotInput', user_input)
+}
+
+
+//----------------------------------------------------------------------------------//
+/*** Dummy EHR **/
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+}
+
+
+
+</script>
+
+<body onload="reloadTheSamePage()">
+
+   <div id="welcome_container">
+    <div class="w3-twothird w3-container">
+      <h1 class="w3-text-black">Mobile PWA Iframe Configuration Page</h1>
+        <label for="fname">PWA Environment:</label>
+        <select name="PWA_ENV" id="PWA_ENV" style="width:50%;" onChange="selectUrl()">
+          <option value="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">---Select---</option>
+	  <option value="https://pwa-toolchain-dev-master.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">pwa-toolchain-dev-master</option>
+          <option value="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">CERT</option>
+          <option value="https://m3595-dev-master.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">M3595</option>
+          <option value="https://mdx-pwa-dev-personal-1.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-1</option>
+          <option value="https://mdx-pwa-dev-personal-2.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-2</option>
+          <option value="https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-3</option>
+          <option value="http://localhost:3000/#/gateway?jws=">Localhost</option>
+        </select>
+        <br><br>
+        <label for="fname">End Point:</label> <input type="text" id="mobilePWAEndPoint" name="mobilePWAEndPoint" size="150" value="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">
+        <br><br>
+        <label for="lname">JWKS Token:</label> <textarea id="jwsToken" name="jwsToken" rows="4" cols="80"></textarea><br><br>
+        <input type="submit" value="Submit" onclick="openIFrame()">
+        <p>
+          <h3>Steps to get the Token</h3>
+          <ol>
+            <li>Login to <a href='https://www.dmx.eis-deliveryintegration.cloud/' target="_blank"> https://www.dmx.eis-deliveryintegration.cloud/ </a></li>
+            <li>Click on Drug Interaction or IV Compatibility Tab ( This will open a new tab to micromedexsolutions)</li>
+            <li>Copy the value of 'jws' from URL query parameter</li>
+          </ol>
+        </p>
+    </div>
+  </div>
+
+<div id="main_container">
 <!-- Patient Top-Line Info and Watson Button -->
 <header id="Header">
     <div class="w3-container w3-theme-l2 w3-padding-64">
@@ -51,10 +325,11 @@ function receiveMessage(event) {
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-center w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
 	<a href="#" class="w3-bar-item w3-button w3-theme-l1">EMR Home</a>
-	<a href="#" target="_blank" class="w3-bar-item w3-button w3-theme-l1" onclick="return launch_drug_interactions();">Drug Interactions</a>
-	<a href="#" target="_blank" class="w3-bar-item w3-button w3-theme-l1" onclick="return launch_iv_compatability();">IV Compatibility</a>
-	<a href="#" target="_blank" class="w3-bar-item w3-button w3-theme-l1">NeoFax & Pediatrics</a>
+  <a href="#" class="w3-bar-item w3-button w3-theme-l1" onclick="return launch_drug_interactions();">Drug Interactions</a>
+  <a href="#" class="w3-bar-item w3-button w3-theme-l1" onclick="return launch_iv_compatability();">IV Compatibility</a>
+	<a href="#" class="w3-bar-item w3-button w3-theme-l1">NeoFax & Pediatrics</a>
 	<a href="#" class="w3-bar-item w3-button w3-theme-l1">Help</a>
+  <a href="#" class="w3-bar-item w3-button w3-theme-l1 white-backround" onclick="unmountAskwatson()">Unmount AskWatson</a>
   </div>
 </div>
 
@@ -77,117 +352,44 @@ function receiveMessage(event) {
 <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
 <div class="w3-main" style="margin-left:250px;">
 
-  <div class="w3-row w3-padding-64">
-    <div class="w3-twothird w3-container">
-      <h1 class="w3-text-black">[CONTENT FROM LEFT MARGIN MENU, eg, Patient Notes]</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
-        dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-	<div id="event-from-mdx" style="background-color: wheat;">
-    </div>
-    <div class="w3-right">
-        <label for="wainput">&#8478; Ask Watson:</label>
-        <br>
-        <input style="background-color: greenyellow;" type="text" placeholder="What would you like to know? ..." id="wainput" name="wainput" size="66" onkeydown="launch_chatbot_input(this)"></input>
-        <br>&nbsp;
-        <br>
-			<iframe id="AskWatson" style="width: 480px; height: 680px;" >
-			</iframe>
-		</div>
-  </div>
+   	<div class="w3-main" style="margin-left:50px;">
 
+      <div class="w3-row w3-padding-64" style="padding-top: 0px!important;">
+        <div class="w3-twothird w3-container" style="padding-top: 0px!important;">
+          <h1 class="w3-text-black">[CONTENT FROM LEFT MARGIN MENU, eg, Patient Notes]</h1>
+          <!--p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
+            dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p-->
+        </div>
+      </div>
 
-  <footer id="Footer">
-    <div class="w3-container w3-theme-l2 w3-padding-12 w3-bottom">
-      <h5>INTERNAL USE ONLY.  DO NOT DISTRIBUTE</h5>
+    <div class="float-container">
+       <div class="float-child-askwatson">
+            <iframe id="AskWatson" style="width: 480px; height: 680px;" >
+            </iframe>
+       </div>     
+       <div class ="float-child-chat">
+          <br>
+          <br>
+          <label for="wainput">&#8478; Ask Watson:</label>
+          <br>
+          <input style="background-color: greenyellow;" type="text" placeholder="What would you like to know? ..." id="wainput" name="wainput" size="66" onkeypress="sendChatbotInput(event)"></input>
+          <br>&nbsp;
+          <br>
+       </div>
+       <div id="message_container" class ="float-child-message">
+          <h3 id="message_container_title"></h3>
+          <textarea id="event-from-mdx" rows="10" cols="40"></textarea>
+       </div>
     </div>
-  </footer>
-
-<!-- END MAIN -->
+      <footer id="Footer">
+        <div class="w3-container w3-theme-l2 w3-padding-12 w3-bottom">
+          <h5>INTERNAL USE ONLY.  DO NOT DISTRIBUTE</h5>
+        </div>
+      </footer>
+    <!-- END MAIN -->
+    </div>
 </div>
 
-<script>
-
-const IFRAME_URL = "https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud"
-
-    // Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-    if (mySidebar.style.display === 'block') {
-        mySidebar.style.display = 'none';
-        overlayBg.style.display = "none";
-    } else {
-        mySidebar.style.display = 'block';
-        overlayBg.style.display = "block";
-    }
-}
-
-
-// see: https://stackoverflow.com/questions/8642488/how-to-use-javascript-variable-in-iframe-src
-window.onload = event => {
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! window.onload: ENTER")
-    document.getElementById("AskWatson").src = IFRAME_URL
-
-    document.getElementById("wainput").addEventListener("keydown", function(event) {
-        console.log("========================== wainput event=",event)
-        if (event.key === "Enter") {
-            const text_field = event.target
-            const input_text = text_field.value // get current user input
-            launch_chatbot_input(input_text)  // send input_text to watson assistant
-            text_field.value = ''  // clear the input field
-            event.preventDefault();
-            return false;
-        } //endif
-        return true;
-    })
-}
-
-function launch_pwa_handler(page_type='', user_input='') {
-    console.log("===================================>>>>>   launch_pwa_handler: ENTER page_type=", page_type, "user_input=", user_input);
-    // event.preventDefault();
-    const iframe = document.getElementById('AskWatson');
-    const iframe_window =  iframe.contentWindow; //|| iframe.contentDocument
-    console.log('iframe====================',iframe);
-//     console.log('iframe window.........................##',iframe_window);
-	const message={
-		type: "PWA_ACTION",
-            navType: page_type,
-            name: "MDXWatsonNavigateTool",
-            input: user_input
-        };
-	console.log('Printing message  ****************', message);
-    iframe_window.postMessage(
-	    message,
-            iframe.src
-    )
-    console.log("launch_pwa_handler: EXIT");
-    return false; // prevent anchor tag from opening href url
-}
-
-function launch_drug_interactions() {
-    return launch_pwa_handler('drugInteraction')
-}
-
-function launch_iv_compatability() {
-    return launch_pwa_handler('ivCompatibility')
-}
-
-function launch_chatbot_input(user_input) {
-    // const user_input = "adult dose wafarin"  // TODO: get this from input field
-    return launch_pwa_handler('chatbotInput', user_input)
-}
-	
-// Close the sidebar with the close button
-function w3_close() {
-    mySidebar.style.display = "none";
-    overlayBg.style.display = "none";
-}
-</script>
 
 </body>
 </html>
