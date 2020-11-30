@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <title>Dummy EMR</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +9,10 @@
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+
+<!--meta http-equiv="X-FRAME-OPTIONS" content="ALLOW"-->
 
 <style>
 html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
@@ -18,10 +24,10 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   height: inherit;
   }
  #AskWatson {
-	//display: none;
-	border: solid 1px #000000;
-	width=480px;
-	height=680px;
+  //display: none;
+  border: solid 1px #000000;
+  width=480px;
+  height=680px;
 }
 
 .w3-padding-64{
@@ -50,7 +56,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
   float: right!important;
 }
 
-#main_container, #message_container{
+#welcome_container, #message_container{
   display: none;
 }
 
@@ -83,8 +89,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
 }  
 
 </style>
-<!--script src="https://code.jquery.com/jquery-3.5.1.min.js" /></script-->
+
 <script type="text/javascript">
+
 window.addEventListener("message", receiveMessage, false);
 
   // see: https://stackoverflow.com/questions/8642488/how-to-use-javascript-variable-in-iframe-src
@@ -168,6 +175,7 @@ window.addEventListener("message", receiveMessage, false);
   }
 
   function openIFrame(){
+  //alert('hi');
     if(!document.getElementById("mobilePWAEndPoint").value || !document.getElementById("jwsToken").value)
     {
       alert ( "End Point URL OR JWS token can't be empty");
@@ -207,9 +215,15 @@ window.addEventListener("message", receiveMessage, false);
 
   function reloadTheSamePage(){
     var iFrameUrl = localStorage.getItem("iFrameUrl");
-    if(iFrameUrl){
+    if(iFrameUrl && iFrameUrl != ''){
       reLoadIFrame();
-    }
+    }else{
+		var welcome_container = document.getElementById("welcome_container");
+		welcome_container.style.display = "block";
+		
+		var main_container = document.getElementById("main_container");
+		main_container.style.display = "none";
+	}
     window.addEventListener("message", receiveMessage, false);
   }
 
@@ -225,7 +239,7 @@ window.addEventListener("message", receiveMessage, false);
   }
 
 
-  function launch_pwa_handler(page_type='', user_input='') {
+  function launch_pwa_handler(page_type, user_input) {
     console.log("===================================>>>>>   launch_pwa_handler: ENTER page_type=", page_type, "user_input=", user_input);
     // event.preventDefault();
     const iframe = document.getElementById("AskWatson");
@@ -300,6 +314,7 @@ function w3_close() {
 
 </script>
 
+</head>
 <body onload="reloadTheSamePage()">
 
    <div id="welcome_container">
@@ -308,23 +323,23 @@ function w3_close() {
         <label for="fname">PWA Environment:</label>
         <select name="PWA_ENV" id="PWA_ENV" style="width:50%;" onChange="selectUrl()">
           <option value="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">---Select---</option>
-	 <option value="https://pwamdx-stage.cmdx-stage.us-south.containers.appdomain.cloud/#/gateway?jws=">Stage PWA</option>
-	 <option value="https://pwa-toolchain-dev-release.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Release DEV</option>
-	  <option value="https://pwa-toolchain-dev-master.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">pwa-toolchain-dev-master</option>
+		  <option value="https://mdx-pwa-dev-test-1.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">qatest-1</option>
+	      <option value="https://pwa-toolchain-dev-release.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Release DEV</option>
+		  <option value="https://pwa-toolchain-dev-master.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">pwa-toolchain-dev-master</option>
           <option value="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">CERT</option>
           <option value="https://m3595-dev-master.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">M3595</option>
           <option value="https://mdx-pwa-dev-personal-1.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-1</option>
           <option value="https://mdx-pwa-dev-personal-2.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-2</option>
           <option value="https://mdx-pwa-dev-personal-3.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-3</option>
           <option value="https://mdx-pwa-dev-personal-4.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">Personal-4</option>
-	  <option value="https://mdx-pwa-dev-test-1.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">DEV Test #1</option>
-          <option value="http://localhost:3000/#/gateway?jws=">Localhost</option>
+    <option value="https://mdx-pwa-dev-test-1.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">DEV Test #1</option>
+          <option value="http://localhost:9080/#/gateway?jws=">Localhost</option>
         </select>
         <br><br>
-        <label for="fname">End Point:</label> <input type="text" id="mobilePWAEndPoint" name="mobilePWAEndPoint" size="150" value="https://mdx-pwa-cert-c.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=">
+        <label for="fname">End Point:</label> <input type="text" id="mobilePWAEndPoint" name="mobilePWAEndPoint" size="150" value="http://localhost:9080/#/gateway?jws=">
         <br><br>
-        <label for="lname">JWKS Token:</label> <textarea id="jwsToken" name="jwsToken" rows="4" cols="80"></textarea><br><br>
-        <input type="submit" value="Submit" onclick="openIFrame()">
+        <label for="lname">JWKS Token:</label> <textarea id="jwsToken" name="jwsToken" rows="4" cols="80">eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjE1ODE2MTQ5MDAxMTMifQ.eyJhZmZpbGlhdGlvbiI6W3siY3VzdCI6ImRlbW8iLCJncm91cCI6Im1haW4ifV0sInN1YiI6InB1YWlkfDgzMjQzNDMiLCJpYXQiOjE2MDY1OTcwMjQsImlzcyI6Imh0dHBzOi8vd3d3LmRteC5laXMtZGVsaXZlcnlpbnRlZ3JhdGlvbi5jbG91ZC8iLCJhdWQiOlsiaHR0cHM6Ly93d3cuZG14LmVpcy1kZWxpdmVyeWludGVncmF0aW9uLmNsb3VkL2FwaSJdLCJzY29wZSI6InJlYWQ6bWR4IiwiZXhwIjoxNjA3MjAxODI0LCJuYmYiOjE2MDY1OTcwMjR9.p7wEALUJVq7Yq82yxGG-J_4zCsJu1MhKS6SFibKvfyKBvwKBVtwkv655B6rPSv4s1aPHh6E2q7AifYMABq0-3KjRvM5PHQgGRU7G17x_-Uf61cEZIjrydYswhCZB7gyukywcIPjxrDu5U6qB-TS35pVIDRMhhF1mmgk-yiTeKGDeaIxRhXeK7jGOIcUrWbpkqYoGmoCWCK983ip_QCnSdvLSOKwZfpuvdbyGctxRbTwZTlkeu9UITA21ZUp8nbKBFsmeUd1REQQyFZDP4LC0Yq0fxLrgPxzSU2MZ5JB9MP4uebJ_dq9-oJAzpwNalyHPLyOgPiFIC-p_OCMV9T0SyQ</textarea><br><br>
+        <button onclick="openIFrame()">Submit</button>
         <p>
           <h3>Steps to get the Token</h3>
           <ol>
@@ -340,20 +355,20 @@ function w3_close() {
 <!-- Patient Top-Line Info and Watson Button -->
 <header id="Header">
     <div class="w3-container w3-theme-l2 w3-padding-64">
-		<div class="w3-main" style="margin-left:250px;">
+    <div class="w3-main" style="margin-left:250px;">
       <h4>[Top-line Patient Info HERE:  Name, Diagnoses, Height, Weight, DOB, Allergies, etc.]</h4>
-		</div>			
+    </div>      
 </header>
 
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-center w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
-	<a href="#" class="w3-bar-item w3-button w3-theme-l1">EMR Home</a>
+  <a href="#" class="w3-bar-item w3-button w3-theme-l1">EMR Home</a>
   <a href="#" class="w3-bar-item w3-button w3-theme-l1" onclick="return launch_drug_interactions();">Drug Interactions</a>
   <a href="#" class="w3-bar-item w3-button w3-theme-l1" onclick="return launch_iv_compatability();">IV Compatibility</a>
-	<a href="#" class="w3-bar-item w3-button w3-theme-l1">NeoFax & Pediatrics</a>
-	<a href="#" class="w3-bar-item w3-button w3-theme-l1">Help</a>
+  <a href="#" class="w3-bar-item w3-button w3-theme-l1">NeoFax & Pediatrics</a>
+  <a href="#" class="w3-bar-item w3-button w3-theme-l1">Help</a>
   <a href="#" class="w3-bar-item w3-button w3-theme-l1 white-backround" onclick="unmountAskwatson()">Unmount AskWatson</a>
   </div>
 </div>
@@ -377,7 +392,7 @@ function w3_close() {
 <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
 <div class="w3-main" style="margin-left:250px;">
 
-   	<div class="w3-main" style="margin-left:50px;">
+    <div class="w3-main" style="margin-left:50px;">
 
       <div class="w3-row w3-padding-64" style="padding-top: 0px!important;">
         <div class="w3-twothird w3-container" style="padding-top: 0px!important;">
@@ -389,8 +404,16 @@ function w3_close() {
 
     <div class="float-container">
        <div class="float-child-askwatson">
-            <iframe id="AskWatson" style="width: 480px; height: 680px;" >
-            </iframe>
+            <!--iframe id="AskWatson" style="width: 480px; height: 680px;" src="https://mdx-pwa-dev-personal-2.cmdx-k8s-2nodes-1zone.us-south.containers.appdomain.cloud/#/gateway?jws=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjE1ODE2MTQ5MDAxMTMifQ.eyJhZmZpbGlhdGlvbiI6W3siY3VzdCI6ImRlbW8iLCJncm91cCI6Im1haW4ifV0sInN1YiI6InB1YWlkfDgzMjQzNDMiLCJpYXQiOjE2MDU3MzM1OTMsImlzcyI6Imh0dHBzOi8vd3d3LmRteC5laXMtZGVsaXZlcnlpbnRlZ3JhdGlvbi5jbG91ZC8iLCJhdWQiOlsiaHR0cHM6Ly93d3cuZG14LmVpcy1kZWxpdmVyeWludGVncmF0aW9uLmNsb3VkL2FwaSJdLCJzY29wZSI6InJlYWQ6bWR4IiwiZXhwIjoxNjA2MzM4MzkzLCJuYmYiOjE2MDU3MzM1OTN9.gv0zqgrgm_iPMkga7I-mypl31jWrgAcKIIkw5e5rPyrjMJdCbQfBa-IV088jJaL-ExFyHmvrZIhEI4YnHCehyZkzIyS9P8XR8RquMVRXzaxh-AX524uYkaqS1nD05zGP_PQonzwvNqu07WRdsvHWbsgiy8XpRQBel3GhTJvWpzoCwfMgcuAbroj96XgoiGjCDroHS5PqLIwlUY11hfq81HRHrkROa_W4K6FmcA3FJa2ib4BQBRK1O2qhX9fMkVX3MqTfDZDOyZSLSoTIMpn7gse5gcEN1FVOuS7qFecGpxGGZulb2niFgrHVLd19cKI4pZWMde9S_v10R1m3onqSMw">
+            </iframe-->
+			<!--iframe id="AskWatson" style="width: 480px; height: 680px;" 
+			src="https://cartui.adcrws.com/v1/cart?access_token=e09a8a65c9d733656252ce480ce125e37100592adf5449b0570d7ebc3df85b95&member_key=33453576&redirect_url=parent::https:%2F%2Fwww.greatfun.com%2FResults_New">
+			</iframe-->
+			
+			<iframe id="AskWatson" style="width: 480px; height: 680px;" >
+			</iframe>
+			
+            <!--iframe id="AskWatson" style="width: 480px; height: 680px;" src="https://cartui.adcrws.com:443/v1/cart?access_token=e09a8a65c9d733656252ce480ce125e37100592adf5449b0570d7ebc3df85b95&amp;member_key=33453576&amp;redirect_url=parent::https://www.greatfun.com/Results_New?categoryId=all&amp;keyword=regal&amp;lat=37.686&amp;lon=-77.5507&amp;searchType=coupon" frameborder="0" scrolling="no" style="height: 651px; overflow: hidden; min-height: 160px;"> </iframe-->
        </div>     
        <div class ="float-child-chat">
           <br>
@@ -401,12 +424,12 @@ function w3_close() {
           <br>&nbsp;
           <br>
        </div>
-		<br>
+    <br>
        <div id="message_container" class ="float-child-message">
           <h3 id="message_container_title"></h3>
           <textarea id="event-from-mdx" rows="10" cols="40">&nbsp;</textarea>
        </div>
-		<br>
+    <br>
        <div id="error_message_container" class="float-child-chat">
           <br>
           <br>
@@ -415,7 +438,7 @@ function w3_close() {
           <input style="background-color: pink;" type="text" placeholder="Enter error message ..." id="wa_error" name="wa_error" size="66" onkeypress="sendChatbotError(event)"></input>
           <br>&nbsp;
           <br>
-	 </div>
+   </div>
     </div>
       <footer id="Footer">
         <div class="w3-container w3-theme-l2 w3-padding-12 w3-bottom">
@@ -425,7 +448,6 @@ function w3_close() {
     <!-- END MAIN -->
     </div>
 </div>
-
 
 </body>
 </html>
